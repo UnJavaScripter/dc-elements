@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>dc-elements: Checkbox</title>
+  <style>
+    body.light {
+      background: #e2cca2;
+      color: #222;
+    }
+
+    body.dark {
+      background: #444;
+      color: #aaa;
+    }
+
+    li {
+      padding: 1rem 0.3rem;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: #444;
+        color: #aaa;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <ul>
+    <li>
+      <dc-checkbox id="cb-1" label-text="Lighst off" elem-id="lighstOn"></dc-checkbox>
+    </li>
+    <li>
+      <dc-checkbox id="cb-2" label-text="Lighst on" elem-id="lighstOff" checked="false"></dc-checkbox>
+    </li>
+    <li>
+      <dc-checkbox id="cb-3" label-text="Do nothing" elem-id="nothing"></dc-checkbox>
+    </li>
+  </ul>
+
+  <script src="dc-elements/checkbox.js"></script>
+
+  <script>
+    const isDarkModeOn = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    darkModeMediaQuery.addListener((e) => {
+      setInitialState(e.matches);
+    });
+
+    const cb1 = document.getElementById('cb-1');
+    const cb2 = document.getElementById('cb-2');
+    const cb3 = document.getElementById('cb-3');
+
+    const setInitialState = (darkModeEnabled) => {
+      cb1.setAttribute('checked', darkModeEnabled);
+      cb2.setAttribute('checked', !darkModeEnabled);
+    }
+
+    setInitialState(isDarkModeOn);
+
+    cb1.addEventListener('change', (event) => {
+      if (cb1.checked) {
+        document.body.classList.remove('light');
+        document.body.classList.add('dark');
+      } else {
+        document.body.classList.remove('dark');
+        document.body.classList.add('light');
+      }
+      cb2.setAttribute('checked', !cb2.checked);
+    });
+
+    cb2.addEventListener('change', (event) => {
+      if (cb2.checked) {
+        document.body.classList.remove('dark');
+        document.body.classList.add('light');
+      } else {
+        document.body.classList.remove('light');
+        document.body.classList.add('dark');
+      }
+      cb1.setAttribute('checked', !cb1.checked);
+    });
+
+    cb3.addEventListener('change', (event) => {
+      console.log('¯\_(ツ)_/¯');
+    });
+
+
+    window.customElements.define('dc-checkbox', DcCheckbox);
+  </script>
+</body>
+
+</html>
