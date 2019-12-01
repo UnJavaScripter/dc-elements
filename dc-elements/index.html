@@ -45,7 +45,11 @@
 
   <script src="/dc-elements/checkbox.js"></script>
 
-  <script>
+  <script defer>
+    // Component initialization
+    window.customElements.define('dc-checkbox', DcCheckbox);
+
+
     const isDarkModeOn = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
     const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -89,9 +93,6 @@
     cb3.addEventListener('change', (event) => {
       console.log('¯\_(ツ)_/¯');
     });
-
-
-    window.customElements.define('dc-checkbox', DcCheckbox);
   </script>
 </body>
 
