@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Star Rating</title>
+</head>
+<body>
+
+  <dc-star-rating id="star-rating" aria-label="calificación" value="1" total="5"></dc-star-rating>
+  <dc-star-rating id="star-rating-selectable" aria-label="calificación" value="3" total="5" selectable="true"></dc-star-rating>
+  <dc-star-rating id="star-rating-random-val" aria-label="calificación" value="3" total="5"></dc-star-rating>
+
+  <script src="./star-rating.js"></script>
+  <script>
+    window.customElements.define('dc-star-rating', DcStarRating);
+    const ratingRandom = document.getElementById('star-rating-random-val');
+    const ratingSelectable = document.getElementById('star-rating-selectable');
+    
+    
+    ratingSelectable.addEventListener('rating-changed', (e) => {
+      console.log(e.detail);
+    });
+
+    setInterval(() => {
+      ratingRandom.setAttribute('value', Math.ceil(Math.random() * 5));
+    }, 700)
+  </script>
+</body>
+</html>

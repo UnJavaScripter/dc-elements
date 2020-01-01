@@ -1,4 +1,3 @@
-
 class DcCheckbox extends HTMLElement {
   constructor(checkedCallback) {
     super();
@@ -40,7 +39,7 @@ class DcCheckbox extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['label-text', 'checked', 'elem-id'];
+    return ['label-text', 'checked', 'elem-id', 'id'];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -65,6 +64,14 @@ class DcCheckbox extends HTMLElement {
         this.elemId = newVal;
         this.boxInput.id = this.elemId;
         this.boxLabel.setAttribute('for', this.elemId);
+        break;
+      }
+      case ('id'): {
+        if(!this.elemId) {
+          this.elemId = newVal;
+          this.boxInput.id = this.id;
+          this.boxLabel.setAttribute('for', this.id);
+        }
         break;
       }
     }
@@ -111,6 +118,10 @@ class DcCheckbox extends HTMLElement {
         align-items: center;
         justify-content: space-between;
         cursor: pointer;
+      }
+
+      label>span {
+        margin: 0 1rem;
       }
 
       label .svg-checkbox-checked {

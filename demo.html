@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>dc-elements demo page</title>
+  <style>
+    main {
+      display: flex;
+      justify-content: center;
+    }
+
+    .demo-area {
+      background-color: #f5f5f5;
+      padding: 2rem 15rem;
+      box-shadow: 3px 5px 9px 0px #b5b5b5;
+    }
+  </style>
+</head>
+<body>
+  
+  <main>
+    <article class="demo">
+      <h2>Checkbox</h2>
+      <div class="demo-area">
+        <dc-checkbox id="checkbox" label-text="Check my box" elem-id="your-element-identifier"></dc-checkbox>
+      </div>
+    </article>
+  </main>
+
+  <!-- Checkbox import -->
+  <script src="/dc-elements/checkbox/checkbox.js"></script>
+
+  <script>
+    window.customElements.define('dc-checkbox', DcCheckbox);
+  </script>
+</body>
+</html>
