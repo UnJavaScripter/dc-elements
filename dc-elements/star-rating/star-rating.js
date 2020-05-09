@@ -110,3 +110,5 @@ class DcStarRating extends HTMLElement {
     `;
   }
 }
+
+customElements.define('dc-star-rating', DcStarRating);
