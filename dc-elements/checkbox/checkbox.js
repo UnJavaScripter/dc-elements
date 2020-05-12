@@ -157,3 +157,5 @@ class DcCheckbox extends HTMLElement {
     containerElem.appendChild(svgUnchecked);
   }
 }
+
+window.customElements.define('dc-checkbox', DcCheckbox);
