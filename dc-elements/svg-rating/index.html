@@ -21,7 +21,7 @@
 
 <body>
 
-  <template id="ducky">
+  <template id="ducky-template">
     <svg stroke-width="1px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
       x="0px" y="0px" viewBox="0 0 512 512" xml:space="preserve">
       <path
@@ -38,7 +38,7 @@
 			c12.843-2.24,23.936-4.181,34.325-4.181c29.397,0,53.333,23.936,53.333,53.333C362.667,371.851,329.173,405.344,288,405.344z" />
     </svg>
   </template>
-  <template id="star">
+  <template id="star-template">
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 90.265 85.85">
       <g transform="translate(-49.73 -211)">
         <path transform="rotate(-.14927 -342.31 266.54)" stroke="white"
@@ -46,7 +46,7 @@
       </g>
     </svg>
   </template>
-  <template id="heart">
+  <template id="heart-template">
     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" style="margin: 0 1rem;"
       xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512"
       xml:space="preserve">
@@ -57,7 +57,7 @@
        C512,93.417,453.532,30,376,30z" />
     </svg>
   </template>
-  <template id="poop">
+  <template id="poop-template">
     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
       y="0px" width="920.001px" height="920.001px" viewBox="0 0 920.001 920.001"
       stroke-width="1rem" xml:space="preserve">
@@ -79,7 +79,7 @@
       C133.851,419.701,135.75,421.401,137.75,420.901z" />
     </svg>
   </template>
-  <template id="fire">
+  <template id="fire-template">
     <svg version="1.1" stroke-width="0" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 512 512" xml:space="preserve">
 		<path d="M446.906,299.769c-5.865-76.359-41.417-124.21-72.781-166.436C345.083,94.241,320,60.483,320,10.685
@@ -97,18 +97,32 @@
 
   <main>
     <div class="container">
-      <dc-svg-rating template-id="star" full-color="yellow" hover-color="white" empty-color="gray" value="2" total="5">
+      <dc-svg-rating template-id="ducky-template" full-color="#fdd11b" hover-color="yellow" empty-color="#990" value="2" total="5">
     </div>
     <div class="container">
-      <dc-svg-rating template-id="heart" full-color="#f00" value="1" total="5">
+      <dc-svg-rating template-id="star-template" full-color="yellow" hover-color="white" empty-color="gray" value="2" total="5">
     </div>
     <div class="container">
-      <dc-svg-rating id="fire" template-id="fire" full-color="orange" value="3" stroke-color="#ff5722" total="5">
+      <dc-svg-rating id="heart" template-id="heart-template" full-color="#f00" value="1" total="5">
     </div>
     <div class="container">
-      <dc-svg-rating id="poop" template-id="poop" full-color="brown" stroke-color="brown" value="4" total="5" static>
+      <dc-svg-rating id="fire" template-id="fire-template" full-color="orange" value="2" stroke-color="#ff5722" total="3">
+    </div>
+    <div class="container">
+      <dc-svg-rating id="poop" template-id="poop-template" full-color="brown" stroke-color="brown" value="4" total="5" static>
     </div>
   </main>
+
+  <input type="range" name="" id="range" min="1" max="5" step="1">
+  <script>
+    const r = document.getElementById('range');
+    const heart = document.getElementById('heart')
+    r.addEventListener('change', (e) => {
+      console.log(heart.value)
+      heart.setAttribute('value', Number(e.srcElement.value));
+      console.log(heart.value)
+    })
+  </script>
 
   <script src="./svg-rating.js"></script>
 </body>
