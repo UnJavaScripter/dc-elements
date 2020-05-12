@@ -7,14 +7,19 @@
   <title>any rating</title>
   <style>
     body {
-      background-color: black;
-      color: #eee;
+      font-family: sans-serif;
     }
     main {
-      width: 21rem;
+      display: flex;
     }
     .container {
-      height: 5rem;
+      background-color: #f5f5f5;
+      box-shadow: 3px 5px 9px 0px #b5b5b5;
+      margin: 1rem 1rem;
+      padding: 0.5rem 3rem 2rem 3rem;
+      display: flex;
+      flex-direction: column;
+      text-align: center;
     }
   </style>
 </head>
@@ -23,7 +28,7 @@
 
   <template id="ducky-template">
     <svg stroke-width="1px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-      x="0px" y="0px" viewBox="0 0 512 512" xml:space="preserve">
+      x="0px" y="0px" viewBox="0 0 512 512" xml:space="preserve" style="margin: 0 0.2rem; stroke-width: 1px;">
       <path
         d="M497.536,159.861l0.235-0.235C506.816,151.52,512,140.021,512,128.011c0-23.531-19.136-42.667-42.667-42.667h-29.824
 			c-2.325-2.368-6.507-8.491-9.963-13.525C412.373,46.731,380.416,0.011,320,0.011c-83.52,0-128,68.139-128,117.333
@@ -47,7 +52,7 @@
     </svg>
   </template>
   <template id="heart-template">
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" style="margin: 0 1rem;"
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" style="margin: 0 0.2rem;"
       xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512"
       xml:space="preserve">
       <path d="M376,30c-27.783,0-53.255,8.804-75.707,26.168c-21.525,16.647-35.856,37.85-44.293,53.268
@@ -97,32 +102,30 @@
 
   <main>
     <div class="container">
-      <dc-svg-rating template-id="ducky-template" full-color="#fdd11b" hover-color="yellow" empty-color="#990" value="2" total="5">
+      <h2>All fill colors defined</h2>
+      <dc-svg-rating template-id="star-template" full-color="#ffce00" hover-color="#f6cf4f" empty-color="gray" value="2" total="5">
     </div>
+
     <div class="container">
-      <dc-svg-rating template-id="star-template" full-color="yellow" hover-color="white" empty-color="gray" value="2" total="5">
+      <h2>No hover color defined</h2>
+      <dc-svg-rating template-id="ducky-template" full-color="#fdd11b" empty-color="#cfad3f" value="2" total="5">
     </div>
+    
     <div class="container">
+      <h2>Only fill color defined</h2>
       <dc-svg-rating id="heart" template-id="heart-template" full-color="#f00" value="1" total="5">
     </div>
+
     <div class="container">
+      <h2>Total of 3</h2>
       <dc-svg-rating id="fire" template-id="fire-template" full-color="orange" value="2" stroke-color="#ff5722" total="3">
     </div>
+
     <div class="container">
+      <h2>Disabled</h2>
       <dc-svg-rating id="poop" template-id="poop-template" full-color="brown" stroke-color="brown" value="4" total="5" static>
     </div>
   </main>
-
-  <input type="range" name="" id="range" min="1" max="5" step="1">
-  <script>
-    const r = document.getElementById('range');
-    const heart = document.getElementById('heart')
-    r.addEventListener('change', (e) => {
-      console.log(heart.value)
-      heart.setAttribute('value', Number(e.srcElement.value));
-      console.log(heart.value)
-    })
-  </script>
 
   <script src="./svg-rating.js"></script>
 </body>
