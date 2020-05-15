@@ -1,104 +1,101 @@
+"use strict";
 class DcCheckbox extends HTMLElement {
-  constructor(checkedCallback) {
-    super();
-    const style = document.createElement('style');
-    const shadowRoot = this.attachShadow({ mode: 'open' });
-
-    this.boxContainer = document.createElement('div');
-
-    this.boxLabel = document.createElement('label');
-    this.boxInput = document.createElement('input');
-
-    this.boxInput.type = 'checkbox';
-    this.boxInput.checked = null;
-
-    this.boxInput
-      .addEventListener('change', () => {
-        const changeEvent = new CustomEvent('change', {
-          detail: {elemId: this.elemId, value: this.checked}
+    constructor() {
+        super();
+        this.checked = false;
+        const style = document.createElement('style');
+        const shadowRoot = this.attachShadow({ mode: 'open' });
+        this.boxContainer = document.createElement('div');
+        this.boxLabel = document.createElement('label');
+        this.boxInput = document.createElement('input');
+        this.boxContainer.classList.add('box-container');
+        this.boxContainer.setAttribute('tabindex', '0');
+        this.labelText = this.getAttribute('label-text') || 'Checkbox';
+        this.boxPosition = this.getAttribute('box-position') || 'right';
+        this.checked = this.getCheckedStateFromAttr(this.getAttribute('checked'));
+        this.setLocalCheckState(this.checked);
+        this.boxInput.type = 'checkbox';
+        this.boxInput.id = this.id;
+        this.boxLabel.setAttribute('for', this.id);
+        this.updateLabel(this.labelText);
+        this.boxInput
+            .addEventListener('change', () => {
+            const changeEvent = new CustomEvent('change', {
+                detail: { elemId: this.id, value: this.checked }
+            });
+            // Toggle the current state inside the component
+            this.toggleCheckedState();
+            // Populate the changes locally
+            this.setLocalCheckState(this.checked);
+            this.dispatchEvent(changeEvent);
         });
-        // Toggle the current state inside the component
-        this.checked = !this.checked;
-
-        // Populate the changes locally
-        this.setLocalCheckState(this.checked);
-
-        this.dispatchEvent(changeEvent);
-      });
-
-    style.textContent = this.styles();
-
-    this.createCheckBoxes(this.boxLabel);
-
-    shadowRoot.appendChild(style);
-
-    this.boxContainer.appendChild(this.boxInput);
-    this.boxContainer.appendChild(this.boxLabel);
-
-    shadowRoot.appendChild(this.boxContainer);
-  }
-
-  static get observedAttributes() {
-    return ['label-text', 'checked', 'elem-id', 'id'];
-  }
-
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (newValue !== oldValue) {
-      this._updateRendering(name, oldValue, newValue);
+        this.addEventListener('keyup', (event) => {
+            const actionableKeyValues = ["Enter", " ", "Space"];
+            if (actionableKeyValues.indexOf(event.key) !== -1) {
+                this.toggleCheckedState();
+            }
+        });
+        this.createCheckBoxes(this.boxLabel);
+        this.boxContainer.appendChild(this.boxInput);
+        this.boxContainer.appendChild(this.boxLabel);
+        style.textContent = this.styles();
+        shadowRoot.appendChild(style);
+        shadowRoot.appendChild(this.boxContainer);
     }
-  }
-
-  _updateRendering(attrName, oldVal, newVal) {
-    switch (attrName) {
-      case ('label-text'): {
-        this.labelText = newVal;
-        this.boxLabel.insertAdjacentHTML('afterbegin', `<span>${this.labelText}</span>`);
-        break;
-      }
-      case ('checked'): {
-        this.checked = newVal === '' || newVal === 'checked' || newVal === 'true';
-        this.setLocalCheckState(this.checked);
-        break;
-      }
-      case ('elem-id'): {
-        this.elemId = newVal;
-        this.boxInput.id = this.elemId;
-        this.boxLabel.setAttribute('for', this.elemId);
-        break;
-      }
-      case ('id'): {
-        if(!this.elemId) {
-          this.elemId = newVal;
-          this.boxInput.id = this.id;
-          this.boxLabel.setAttribute('for', this.id);
+    static get observedAttributes() {
+        return ['label-text', 'checked'];
+    }
+    toggleCheckedState() {
+        this.setLocalCheckState(this.checked = !this.checked);
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue !== null && newValue !== oldValue) {
+            this._updateRendering(name, newValue);
         }
-        break;
-      }
     }
-  }
-
-  setLocalCheckState(checkedState) {
-    if (checkedState) {
-      this.boxInput.checked = true;
-      this.setAttribute('checked', '');
-      this.boxInput.setAttribute('checked', ''); // necessary?
-    } else {
-      this.boxInput.checked = false;
-      this.removeAttribute('checked');
-      this.boxInput.removeAttribute('checked'); // necessary?
+    _updateRendering(attrName, newVal) {
+        switch (attrName) {
+            case ('label-text'): {
+                this.labelText = newVal;
+                this.updateLabel(this.labelText);
+                break;
+            }
+            case ('checked'): {
+                this.checked = this.getCheckedStateFromAttr(newVal);
+                this.setLocalCheckState(this.checked);
+                break;
+            }
+        }
     }
-  }
-
-  styles() {
-    return `
+    getCheckedStateFromAttr(attrVal) {
+        if (attrVal !== null) {
+            return attrVal === '' || attrVal === 'checked' || attrVal === 'true';
+        }
+        return false;
+    }
+    updateLabel(text) {
+        this.boxLabel.insertAdjacentHTML('afterbegin', `<span>${text || 'Option'}</span>`);
+    }
+    setLocalCheckState(checkedState) {
+        if (checkedState) {
+            this.boxInput.checked = true;
+            this.setAttribute('aria-checked', 'true');
+        }
+        else {
+            this.boxInput.checked = false;
+            this.setAttribute('aria-checked', 'false');
+        }
+    }
+    styles() {
+        return `
       :host {
         font-family: sans-serif;
         display: flex;
         align-items: normal;
       }
-
-      div {
-        width: 100%;
+      
+      .box-container {
+        padding: 0.25rem 0.1rem;
       }
 
       input[type="checkbox"] {
@@ -118,6 +115,7 @@ class DcCheckbox extends HTMLElement {
         align-items: center;
         justify-content: space-between;
         cursor: pointer;
+        flex-direction: ${this.boxPosition === 'left' ? 'row-reverse' : 'row'}
       }
 
       label>span {
@@ -132,30 +130,22 @@ class DcCheckbox extends HTMLElement {
         display: inherit;
       }
     `;
-  }
-
-  createCheckBoxes(containerElem) {
-    const svgChecked = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    const svgUnchecked = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-
-    svgChecked.setAttribute('width', '24');
-    svgChecked.setAttribute('height', '24');
-    svgChecked.setAttribute('viewBox', '0 0  24 24');
-    svgChecked.classList.add('svg-checkbox-checked');
-
-    svgUnchecked.setAttribute('width', '24');
-    svgUnchecked.setAttribute('height', '24');
-    svgUnchecked.setAttribute('viewBox', '0 0  24 24');
-    svgUnchecked.classList.add('svg-checkbox-unchecked');
-
-
-    svgChecked.innerHTML = '<path d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24zm-5.541 8.409l-1.422-1.409-7.021 7.183-3.08-2.937-1.395 1.435 4.5 4.319 8.418-8.591z"/>'
-
-    svgUnchecked.innerHTML = '<path d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z"/>';
-
-    containerElem.appendChild(svgChecked);
-    containerElem.appendChild(svgUnchecked);
-  }
+    }
+    createCheckBoxes(containerElem) {
+        const svgChecked = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        const svgUnchecked = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svgChecked.setAttribute('width', '24');
+        svgChecked.setAttribute('height', '24');
+        svgChecked.setAttribute('viewBox', '0 0  24 24');
+        svgChecked.classList.add('svg-checkbox-checked');
+        svgUnchecked.setAttribute('width', '24');
+        svgUnchecked.setAttribute('height', '24');
+        svgUnchecked.setAttribute('viewBox', '0 0  24 24');
+        svgUnchecked.classList.add('svg-checkbox-unchecked');
+        svgChecked.innerHTML = '<path d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24zm-5.541 8.409l-1.422-1.409-7.021 7.183-3.08-2.937-1.395 1.435 4.5 4.319 8.418-8.591z"/>';
+        svgUnchecked.innerHTML = '<path d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z"/>';
+        containerElem.appendChild(svgChecked);
+        containerElem.appendChild(svgUnchecked);
+    }
 }
-
 window.customElements.define('dc-checkbox', DcCheckbox);
