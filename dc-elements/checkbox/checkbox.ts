@@ -62,32 +62,28 @@ class DcCheckbox extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['label-text', 'checked'];
+    return ['checked'];
   }
 
   toggleCheckedState() {
-    this.setLocalCheckState(this.checked = !this.checked);
+    this.checked = !this.checked
+    this.setLocalCheckState(this.checked);
   }
 
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-    if (oldValue !== null && newValue !== oldValue) {
-      this._updateRendering(name, newValue);
+  attributeChangedCallback(attrName: string, oldValue: string, newValue: string) {
+    switch (attrName) {
+      case ('checked'): {
+        if (newValue !== String(this.checked)) {
+          this.checked = this.getCheckedStateFromAttr(newValue);
+          console.log(this.id, this.checked)
+          this.setLocalCheckState(this.checked);
+        }
+        break;
+      }
     }
   }
 
   _updateRendering(attrName: string, newVal: string) {
-    switch (attrName) {
-      case ('label-text'): {
-        this.labelText = newVal;
-        this.updateLabel(this.labelText);
-        break;
-      }
-      case ('checked'): {
-        this.checked = this.getCheckedStateFromAttr(newVal);
-        this.setLocalCheckState(this.checked);
-        break;
-      }
-    }
   }
 
   getCheckedStateFromAttr(attrVal: string | null) {

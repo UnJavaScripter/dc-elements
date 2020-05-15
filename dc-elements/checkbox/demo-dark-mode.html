@@ -33,19 +33,20 @@
 <body>
   <ul>
     <li>
-      <dc-checkbox id="cb-1" label-text="Lighst off" elem-id="lighstOn"></dc-checkbox>
+      <dc-checkbox id="cb-1" label-text="Lighst off"></dc-checkbox>
     </li>
     <li>
-      <dc-checkbox id="cb-2" label-text="Lighst on" elem-id="lighstOff" checked="false"></dc-checkbox>
+      <dc-checkbox id="cb-2" label-text="Lighst on"></dc-checkbox>
     </li>
     <li>
-      <dc-checkbox id="cb-3" label-text="Do nothing" elem-id="nothing"></dc-checkbox>
+      <dc-checkbox id="cb-3" label-text="Do nothing" checked></dc-checkbox>
     </li>
   </ul>
 
   <script src="./checkbox.js"></script>
 
   <script>
+
     const isDarkModeOn = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
     const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -58,37 +59,43 @@
     const cb3 = document.getElementById('cb-3');
 
     const setInitialState = (darkModeEnabled) => {
-      cb1.setAttribute('checked', darkModeEnabled);
-      cb2.setAttribute('checked', !darkModeEnabled);
+      cb1.setAttribute('checked', String(isDarkModeOn));
+      cb2.setAttribute('checked', String(!isDarkModeOn));
     }
 
     setInitialState(isDarkModeOn);
 
     cb1.addEventListener('change', (event) => {
       if (cb1.checked) {
-        document.body.classList.remove('light');
-        document.body.classList.add('dark');
+        lightsOff();
       } else {
-        document.body.classList.remove('dark');
-        document.body.classList.add('light');
+        lightsOn();
       }
-      cb2.setAttribute('checked', !cb2.checked);
+      cb2.setAttribute('checked', String(!cb1.checked));
     });
 
     cb2.addEventListener('change', (event) => {
       if (cb2.checked) {
-        document.body.classList.remove('dark');
-        document.body.classList.add('light');
+        lightsOn();
       } else {
-        document.body.classList.remove('light');
-        document.body.classList.add('dark');
+        lightsOff();
       }
-      cb1.setAttribute('checked', !cb1.checked);
+      cb1.setAttribute('checked', String(!cb2.checked));
     });
 
     cb3.addEventListener('change', (event) => {
       console.log('¯\_(ツ)_/¯');
     });
+
+    function lightsOn() {
+      document.body.classList.remove('dark');
+      document.body.classList.add('light');
+    }
+    
+    function lightsOff() {
+      document.body.classList.remove('light');
+      document.body.classList.add('dark');
+    }
   </script>
 </body>
 
