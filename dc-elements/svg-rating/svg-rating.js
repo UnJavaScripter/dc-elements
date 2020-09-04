@@ -56,19 +56,18 @@ class DCAnyRating extends HTMLElement {
     `;
     }
     renderStars() {
-        var _a, _b, _c;
         this.ratingContainer.innerHTML = '';
         const template = document.getElementById(String(this.templateId));
         const templateContent = template.content;
         const templateElement = templateContent.firstElementChild;
         const cloneNodes = [];
         for (let i = 0; i < this.total; i++) {
-            (_a = templateElement) === null || _a === void 0 ? void 0 : _a.classList.remove('full', 'empty');
+            templateElement === null || templateElement === void 0 ? void 0 : templateElement.classList.remove('full', 'empty');
             if (i < this.value) {
-                (_b = templateElement) === null || _b === void 0 ? void 0 : _b.classList.add('full');
+                templateElement === null || templateElement === void 0 ? void 0 : templateElement.classList.add('full');
             }
             else {
-                (_c = templateElement) === null || _c === void 0 ? void 0 : _c.classList.add('empty');
+                templateElement === null || templateElement === void 0 ? void 0 : templateElement.classList.add('empty');
             }
             const templateElementClone = templateElement.cloneNode(true);
             if (!this.static) {
