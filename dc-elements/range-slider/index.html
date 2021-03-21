@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Range slider</title>
+  <style>
+    body {
+      background-color: #232326;
+      color: #fefeff;
+      font-family:Verdana, Geneva, Tahoma, sans-serif;
+      margin: 0;
+      padding: 2rem 3rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Range slider</h1>
+    <dc-range-slider id="ta" min="0" max="5" value="3">
+      <!-- <div slot="tal">
+        <span>taaaal</span>
+        <img src="https://picsum.photos/200/300" alt="">
+      </div>       -->
+    </dc-range-slider>
+    
+  
+  <script src="./dc-range-slider.js"></script>
+    <script>
+      const el = document.getElementById('ta')
+      console.log(el)
+      el.addEventListener('change', (e) => {
+        console.log('chaaaange', e.detail.value)
+      })
+    </script>
+</body>
+</html>
