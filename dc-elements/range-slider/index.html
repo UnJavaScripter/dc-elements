@@ -12,25 +12,37 @@
       margin: 0;
       padding: 2rem 3rem;
     }
+    .custom-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: azure;
+      background-color: darkslategrey;
+      border-radius: 100%;
+      height: 3rem;
+      width: 3rem;
+    }
   </style>
 </head>
 <body>
   <h1>Range slider</h1>
     <dc-range-slider id="ta" min="0" max="5" value="3">
-      <!-- <div slot="tal">
-        <span>taaaal</span>
-        <img src="https://picsum.photos/200/300" alt="">
-      </div>       -->
+      <div class="custom-icon" slot="icon-less">
+        -
+      </div>
+      <div class="custom-icon" slot="icon-more">
+        +
+      </div>
     </dc-range-slider>
     
   
   <script src="./dc-range-slider.js"></script>
     <script>
       const el = document.getElementById('ta')
-      console.log(el)
       el.addEventListener('change', (e) => {
         console.log('chaaaange', e.detail.value)
-      })
+      });
     </script>
 </body>
 </html>

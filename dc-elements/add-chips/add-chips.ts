@@ -1,6 +1,7 @@
 class DcAddChips extends HTMLElement {
   chipsArr: string[] = [];
-  chipsContainer = document.createElement('div');
+  _value: string[];
+  
   constructor() {
     super();
     // Debounce
@@ -12,45 +13,62 @@ class DcAddChips extends HTMLElement {
 
     const shadowRoot = this.attachShadow({ mode: 'open' });
     const style = document.createElement('style');
-    const fakeInput = document.createElement('pre');
+    const fakeInput = document.createElement('input');
+    const chipsContainer = document.createElement('div');
 
-    this.chipsContainer.classList.add('chips-container');
+    chipsContainer.classList.add('chips-container');
 
-    fakeInput.addEventListener('keydown', (event) => {
-      const actionableKeyValues = ["Enter"];
-      
-      if(actionableKeyValues.indexOf(event.key) !== -1) {
-        event.preventDefault();
-        console.log('enter')
-        if(fakeInput.innerText.length) {
-          this.chipsArr = this.chipsArr.concat(...[fakeInput.innerText]);
-          this.renderChips(this.chipsArr);
-          fakeInput.innerText = '';
-        }
-      }
-    })
-    
-    fakeInput.classList.add('input');
+    fakeInput.classList.add('chips-input');
     fakeInput.setAttribute('contenteditable', 'true');
-    fakeInput.innerHTML = 'lorem';
 
     style.textContent = this.styles();
-    shadowRoot.appendChild(style);
-    shadowRoot.appendChild(this.chipsContainer);
-    shadowRoot.appendChild(fakeInput);
+    shadowRoot.append(style, chipsContainer, fakeInput);
   }
 
   static get observedAttributes() {
-    return ['chips'];
+    return ['value', 'separators'];
   }
+
+  connectedCallback(): void {
+    const fakeInputElem = <HTMLInputElement>this.shadowRoot.querySelector('.chips-input');
+    const actionableKeyValues = ["Enter", ...this.getAttribute('separators').split('')];
+
+    fakeInputElem.placeholder = this.getAttribute('placeholder') || '';
+
+    fakeInputElem.addEventListener('keydown', ($event: KeyboardEvent) => {
+      if(actionableKeyValues.indexOf($event.key) !== -1) {
+        $event.preventDefault();
+        if(fakeInputElem.value.length) {
+          this.value = this.value.concat(fakeInputElem.value);
+          fakeInputElem.value = '';
+        }
+      }
+    });
+  }
+
+  get value() {
+    return this._value;
+  }
+
+  set value(val: string[]) {
+    if (!this._value) {
+      this._value = [];
+    }
+    const stringValue = val.join(',');
+    this._value = val;
+
+    this.renderChips(this.value);
+    this.emitValue(stringValue);
+    this.setAttribute('value', stringValue)
+  }
+  
 
   attributeChangedCallback(attrName: string, oldValue: string, newValue: string) {
     switch (attrName) {
-      case ('chips'): {
-        console.log(newValue)
+      case ('value'): {
         if(!oldValue) {
-          this.chipsArr = this.chipsArr.concat(...newValue.split(','))
-          this.renderChips(this.chipsArr);
+          const newValArr = newValue.split(',');
+          this.value = this.value ? this.value.concat(newValArr) : newValArr;
         }
         break;
       }
@@ -58,45 +76,74 @@ class DcAddChips extends HTMLElement {
   }
 
   renderChips(newChips: string[]) {
-    this.chipsContainer.innerHTML = '';
+    const chipsContainer = this.shadowRoot.querySelector('.chips-container')
+    chipsContainer.innerHTML = '';
     
-    console.log(this.chipsArr.toString())
     this.setAttribute('chips', this.chipsArr.toString());
-    let chipElem;
-    let chipLabelElem;
-    let deleteChipElem;
+    
     newChips.map(chip => {
-      chipElem = document.createElement('div');
-      deleteChipElem = document.createElement('div');
-      chipLabelElem = document.createElement('div');
-
-      chipElem.classList.add('chip');
-      chipLabelElem.innerText = chip;
-
-      deleteChipElem.classList.add('delete-chip');
-      deleteChipElem.innerText = 'x';
-      deleteChipElem.addEventListener('pointerdown', () => {
-        this.chipsArr = newChips.filter(curentChip => curentChip != chip);
-        this.renderChips(this.chipsArr);
-      });
-
-      chipElem.appendChild(chipLabelElem);
-      chipElem.appendChild(deleteChipElem);
-      this.chipsContainer.appendChild(chipElem);
+      const chipElem = this.generateChip(chip);
+      chipsContainer.appendChild(chipElem);
     });
   }
 
+  generateChip(chipValue: string) {
+    const chipElem = document.createElement('div');
+    const constDismissButtonSlot = document.createElement('slot');
+    
+    chipElem.classList.add('chip');
+
+    constDismissButtonSlot.setAttribute('name', 'icon-dismiss-chip');
+    constDismissButtonSlot.innerText = 'x';
+
+    chipElem.innerHTML = `
+      <div class="chip-value">
+        ${chipValue}
+      </div>
+      <button class="delete-chip">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    `;
+
+    const deleteButtonElem = <HTMLButtonElement>chipElem.querySelector('.delete-chip');
+
+    deleteButtonElem.onclick = ($event: MouseEvent) => {
+      // Remove the DOM element from the parent
+      const chipsContainerElem = ($event.target as HTMLElement).parentElement.parentElement
+      const chip = ($event.target as HTMLElement).parentElement;
+      chipsContainerElem.removeChild(chip);
+
+      // Remove the chipValue from the values
+      this.value = this.value.filter(val => val !== chipValue);
+    };
+    
+    return chipElem;
+  }
+
+
+  emitValue(value: string) {
+    const event = new CustomEvent('change', {
+      detail: {
+        value
+      },
+      bubbles: true
+    });
+
+    this.dispatchEvent(event);
+  }
   
   styles() {
     return `
       :host {
-        color: darkslategray;
+        --color-primary: hsla(300, 60%, 30%, 1);
+        --color-secondary: hsla(300, 60%, 90%, 1);
       }
-      .input {
+      .chips-input {
         background: #eee;
         padding: 0.4rem 0.3rem;
         border: lightgray;
         white-space: pre;
+        width: 100%;
       }
       .chips-container {
         display: flex;
@@ -105,7 +152,9 @@ class DcAddChips extends HTMLElement {
       }
       .chip {
         display: flex;
-        background: rebeccapurple;
+        justify-content: center;
+        gap: 0.9rem;
+        background-color: var(--color-primary);
         color: azure;
         padding: 0.2rem 0.5rem;
         margin: 0.1rem 0.5rem;
@@ -116,11 +165,19 @@ class DcAddChips extends HTMLElement {
         margin: auto;
       }
       .delete-chip {
-        padding-left: 0.8rem;
+        appearance: none;
+        background: transparent;
+        border: none;
         color: darkgray;
         cursor: pointer;
+        padding: 0;
       }
-      `;
+      .delete-chip svg {
+        fill: var(--color-secondary);
+        height: 1.2rem;
+        width: 1rem;
+      }
+    `;
   }
 
 }

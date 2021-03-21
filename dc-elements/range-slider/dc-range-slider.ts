@@ -26,8 +26,8 @@ template.innerHTML = `
     cursor: pointer;
   }
 
-  .icon-less>svg,
-  .icon-more>svg {
+  .icon-less svg,
+  .icon-more svg {
     fill: var(--color-active);
     background-color: var(--color-hover);
     border-radius: 100%;
@@ -58,17 +58,21 @@ template.innerHTML = `
 
 </style>
 <button id="button-less" class="action-button" tabindex="0">
-  <slot class="icon-less" name="icon-less">
-    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 13H5v-2h14v2z"/></svg>
-  </slot>
+  <div class="icon-less">
+    <slot name="icon-less">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 13H5v-2h14v2z"/></svg>
+    </slot>
+  </div>
 </button>
 
 <div class="slider-container"></div>
 
 <button id="button-more" class="action-button" tabindex="0">
-  <slot class="icon-more" name="icon-more">
-    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-  </slot>
+  <div class="icon-more">
+    <slot name="icon-more">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+    </slot>
+  </div>
 </button>
 `;
 
@@ -88,9 +92,7 @@ class DcRangeSlider extends HTMLElement {
     const moreButtonElement = this.shadowRoot.getElementById('button-more');
     
     lessButtonElement.onclick = this.removeStep.bind(this);
-    console.log(lessButtonElement)
     moreButtonElement.onclick = this.addStep.bind(this);
-    console.log(moreButtonElement)
     
   }
 
@@ -98,7 +100,7 @@ class DcRangeSlider extends HTMLElement {
     return ['color'];
   }
 
-  connectedCallback() {
+  connectedCallback(): void {
     const initialValue = Number(this.getAttribute('value')) || 1;
     this.min = !isNaN(Number(this.getAttribute('min'))) ? Number(this.getAttribute('min')) : 1;
     this.max = Number(this.getAttribute('max')) || 10;

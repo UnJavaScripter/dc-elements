@@ -8,11 +8,15 @@
 </head>
 <body>
 
-  <dc-add-chips chips="hiooa,mndoz,viii"></dc-add-chips>
+  <dc-add-chips value="lo,rem" placeholder="tal" separators=",;.">
+  </dc-add-chips>
 
   <script src="./add-chips.js"></script>
   <script>
-    
+    const el = document.querySelector('dc-add-chips');
+    el.addEventListener('change', (event) => {
+      console.log(event.detail.value);
+    })
   </script>
 </body>
 </html>
