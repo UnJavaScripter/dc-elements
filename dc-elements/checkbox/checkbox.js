@@ -18,17 +18,6 @@ class DcCheckbox extends HTMLElement {
         this.boxInput.id = this.id;
         this.boxLabel.setAttribute('for', this.id);
         this.updateLabel(this.labelText);
-        this.boxInput
-            .addEventListener('change', () => {
-            const changeEvent = new CustomEvent('change', {
-                detail: { elemId: this.id, value: this.checked }
-            });
-            // Toggle the current state inside the component
-            this.toggleCheckedState();
-            // Populate the changes locally
-            this.setLocalCheckState(this.checked);
-            this.dispatchEvent(changeEvent);
-        });
         this.addEventListener('keyup', (event) => {
             const actionableKeyValues = ["Enter", " ", "Space"];
             if (actionableKeyValues.indexOf(event.key) !== -1) {
@@ -45,7 +34,14 @@ class DcCheckbox extends HTMLElement {
     static get observedAttributes() {
         return ['checked'];
     }
+    triggerChange() {
+        const changeEvent = new CustomEvent('change', {
+            detail: { elemId: this.id, value: !this.checked }
+        });
+        this.dispatchEvent(changeEvent);
+    }
     toggleCheckedState() {
+        this.triggerChange();
         this.checked = !this.checked;
         this.setLocalCheckState(this.checked);
     }
@@ -54,7 +50,6 @@ class DcCheckbox extends HTMLElement {
             case ('checked'): {
                 if (newValue !== String(this.checked)) {
                     this.checked = this.getCheckedStateFromAttr(newValue);
-                    console.log(this.id, this.checked);
                     this.setLocalCheckState(this.checked);
                 }
                 break;

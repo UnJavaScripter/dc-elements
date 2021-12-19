@@ -3,6 +3,7 @@ class DcAddChips extends HTMLElement {
     constructor() {
         super();
         this.chipsArr = [];
+        this._chips = new Set();
         // Debounce
         // API call
         // Autocomplete list
@@ -30,31 +31,35 @@ class DcAddChips extends HTMLElement {
             if (actionableKeyValues.indexOf($event.key) !== -1) {
                 $event.preventDefault();
                 if (fakeInputElem.value.length) {
-                    this.value = this.value.concat(fakeInputElem.value);
+                    this.value = `${this.value},${fakeInputElem.value}`;
                     fakeInputElem.value = '';
                 }
             }
         });
     }
+    get chips() {
+        return this._chips;
+    }
     get value() {
         return this._value;
     }
     set value(val) {
-        if (!this._value) {
-            this._value = [];
-        }
-        const stringValue = val.join(',');
         this._value = val;
-        this.renderChips(this.value);
-        this.emitValue(stringValue);
-        this.setAttribute('value', stringValue);
+        const valueArr = val.split(',');
+        valueArr.forEach((v) => {
+            if (v) {
+                this._chips.add(v);
+            }
+        });
+        this.renderChips(this.chips);
+        this.emitValue(this.value);
+        this.setAttribute('value', this.value);
     }
     attributeChangedCallback(attrName, oldValue, newValue) {
         switch (attrName) {
             case ('value'): {
                 if (!oldValue) {
-                    const newValArr = newValue.split(',');
-                    this.value = this.value ? this.value.concat(newValArr) : newValArr;
+                    this.value = newValue;
                 }
                 break;
             }
@@ -64,7 +69,7 @@ class DcAddChips extends HTMLElement {
         const chipsContainer = this.shadowRoot.querySelector('.chips-container');
         chipsContainer.innerHTML = '';
         this.setAttribute('chips', this.chipsArr.toString());
-        newChips.map(chip => {
+        newChips.forEach(chip => {
             const chipElem = this.generateChip(chip);
             chipsContainer.appendChild(chipElem);
         });
@@ -90,7 +95,9 @@ class DcAddChips extends HTMLElement {
             const chip = $event.target.parentElement;
             chipsContainerElem.removeChild(chip);
             // Remove the chipValue from the values
-            this.value = this.value.filter(val => val !== chipValue);
+            this.chips.delete(chipValue);
+            const newChipsArr = Array.from(this.chips);
+            this.value = newChipsArr.join(',');
         };
         return chipElem;
     }

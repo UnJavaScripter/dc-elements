@@ -14,7 +14,7 @@ template.innerHTML = `
     height: 2rem;
   }
 
-  .slider-container {
+  .step-selector-container {
     display: flex;
     justify-content: space-evenly;
     width: 100%;
@@ -66,7 +66,7 @@ template.innerHTML = `
   </div>
 </button>
 
-<div class="slider-container"></div>
+<div class="step-selector-container"></div>
 
 <button id="button-more" class="action-button" tabindex="0">
   <div class="icon-more">
@@ -76,7 +76,7 @@ template.innerHTML = `
   </div>
 </button>
 `;
-class DcRangeSlider extends HTMLElement {
+class DcStepSelector extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
@@ -93,14 +93,14 @@ class DcRangeSlider extends HTMLElement {
         const initialValue = Number(this.getAttribute('value')) || 1;
         this.min = !isNaN(Number(this.getAttribute('min'))) ? Number(this.getAttribute('min')) : 1;
         this.max = Number(this.getAttribute('max')) || 10;
-        const sliderContainer = this.shadowRoot.querySelector('.slider-container');
+        const stepSelectorContainer = this.shadowRoot.querySelector('.step-selector-container');
         for (let i = this.min || 1; i <= this.max; i++) {
             const stepElement = document.createElement('button');
             stepElement.setAttribute('data-val', String(i));
             stepElement.setAttribute('aria-label', String(i));
             stepElement.classList.add('step');
             stepElement.onclick = this.stepSelected.bind(this);
-            sliderContainer.appendChild(stepElement);
+            stepSelectorContainer.appendChild(stepElement);
         }
         this.value = initialValue;
     }
@@ -115,8 +115,8 @@ class DcRangeSlider extends HTMLElement {
         }
     }
     highlightUpTo(value) {
-        const sliderContainer = this.shadowRoot.querySelector('.slider-container');
-        for (let step of sliderContainer.children) {
+        const stepSelectorContainer = this.shadowRoot.querySelector('.step-selector-container');
+        for (let step of stepSelectorContainer.children) {
             const stepValue = Number(step.dataset.val);
             step.setAttribute('aria-label', String(stepValue));
             if (stepValue < value) {
@@ -152,4 +152,4 @@ class DcRangeSlider extends HTMLElement {
         this.dispatchEvent(event);
     }
 }
-window.customElements.define('dc-range-slider', DcRangeSlider);
+window.customElements.define('dc-step-selector', DcStepSelector);

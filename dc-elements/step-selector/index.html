@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>step selector</title>
+  <style>
+    body {
+      background-color: #232326;
+      color: #fefeff;
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      margin: 0;
+      padding: 2rem 3rem;
+    }
+
+    h1 {
+      margin-bottom: 3rem;
+    }
+
+    .custom-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: azure;
+      background-color: darkslategrey;
+      border-radius: 100%;
+      height: 3rem;
+      width: 3rem;
+    }
+
+    dc-step-selector {
+      margin: 3rem 0;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>step selector</h1>
+
+  <h2>Default</h2>
+  <dc-step-selector id="default-selector" min="0" max="5" value="1">
+  </dc-step-selector>
+
+  <h2>Custom slots</h2>
+
+  <dc-step-selector id="a-selector" min="0" max="5" value="2">
+    <div class="custom-icon" slot="icon-less">
+      -
+    </div>
+    <div class="custom-icon" slot="icon-more">
+      +
+    </div>
+  </dc-step-selector>
+
+  <h2>Custom slots + Different props</h2>
+
+  <dc-step-selector id="other-selector" min="1" max="10" value="1">
+    <div class="custom-icon" slot="icon-less">
+      &#60;
+    </div>
+    <div class="custom-icon" slot="icon-more">
+      >
+    </div>
+  </dc-step-selector>
+
+
+  <script src="./dc-step-selector.js"></script>
+  <script>
+    const step1 = document.getElementById('default-selector');
+    const step2 = document.getElementById('a-selector');
+    const step3 = document.getElementById('other-selector');
+    
+    step1.addEventListener('change', logChange);
+    step2.addEventListener('change', logChange);
+    step3.addEventListener('change', logChange);
+
+    function logChange(e) {
+      console.log(`${e.target.id}'s new value is ${e.detail.value}`);
+    }
+  </script>
+</body>
+
+</html>

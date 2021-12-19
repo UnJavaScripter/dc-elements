@@ -1,6 +1,7 @@
 class DcAddChips extends HTMLElement {
   chipsArr: string[] = [];
-  _value: string[];
+  _value: string;
+  _chips: Set<string> = new Set();
   
   constructor() {
     super();
@@ -39,27 +40,32 @@ class DcAddChips extends HTMLElement {
       if(actionableKeyValues.indexOf($event.key) !== -1) {
         $event.preventDefault();
         if(fakeInputElem.value.length) {
-          this.value = this.value.concat(fakeInputElem.value);
+          this.value = `${this.value},${fakeInputElem.value}`;
           fakeInputElem.value = '';
         }
       }
     });
   }
 
+  get chips() {
+    return this._chips;
+  }
+
   get value() {
     return this._value;
   }
 
-  set value(val: string[]) {
-    if (!this._value) {
-      this._value = [];
-    }
-    const stringValue = val.join(',');
+  set value(val: string) {
     this._value = val;
-
-    this.renderChips(this.value);
-    this.emitValue(stringValue);
-    this.setAttribute('value', stringValue)
+    const valueArr = val.split(',');
+    valueArr.forEach((v) => {
+      if(v) {
+        this._chips.add(v)
+      }
+    });
+    this.renderChips(this.chips);
+    this.emitValue(this.value);
+    this.setAttribute('value', this.value)
   }
   
 
@@ -67,21 +73,20 @@ class DcAddChips extends HTMLElement {
     switch (attrName) {
       case ('value'): {
         if(!oldValue) {
-          const newValArr = newValue.split(',');
-          this.value = this.value ? this.value.concat(newValArr) : newValArr;
+          this.value = newValue;
         }
         break;
       }
     }
   }
 
-  renderChips(newChips: string[]) {
+  renderChips(newChips: Set<string>) {
     const chipsContainer = this.shadowRoot.querySelector('.chips-container')
     chipsContainer.innerHTML = '';
     
     this.setAttribute('chips', this.chipsArr.toString());
     
-    newChips.map(chip => {
+    newChips.forEach(chip => {
       const chipElem = this.generateChip(chip);
       chipsContainer.appendChild(chipElem);
     });
@@ -112,9 +117,10 @@ class DcAddChips extends HTMLElement {
       const chipsContainerElem = ($event.target as HTMLElement).parentElement.parentElement
       const chip = ($event.target as HTMLElement).parentElement;
       chipsContainerElem.removeChild(chip);
-
       // Remove the chipValue from the values
-      this.value = this.value.filter(val => val !== chipValue);
+      this.chips.delete(chipValue);
+      const newChipsArr = Array.from(this.chips);
+      this.value = newChipsArr.join(',');
     };
     
     return chipElem;

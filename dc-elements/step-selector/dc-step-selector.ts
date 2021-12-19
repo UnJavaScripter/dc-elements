@@ -13,7 +13,7 @@ template.innerHTML = `
     height: 2rem;
   }
 
-  .slider-container {
+  .step-selector-container {
     display: flex;
     justify-content: space-evenly;
     width: 100%;
@@ -65,7 +65,7 @@ template.innerHTML = `
   </div>
 </button>
 
-<div class="slider-container"></div>
+<div class="step-selector-container"></div>
 
 <button id="button-more" class="action-button" tabindex="0">
   <div class="icon-more">
@@ -76,7 +76,7 @@ template.innerHTML = `
 </button>
 `;
 
-class DcRangeSlider extends HTMLElement {
+class DcStepSelector extends HTMLElement {
   _value: number;
   min: number;
   max: number;
@@ -105,7 +105,7 @@ class DcRangeSlider extends HTMLElement {
     this.min = !isNaN(Number(this.getAttribute('min'))) ? Number(this.getAttribute('min')) : 1;
     this.max = Number(this.getAttribute('max')) || 10;
 
-    const sliderContainer = this.shadowRoot.querySelector('.slider-container');
+    const stepSelectorContainer = this.shadowRoot.querySelector('.step-selector-container');
     
     for(let i = this.min || 1; i <= this.max ; i++) {
       const stepElement = document.createElement('button');
@@ -114,7 +114,7 @@ class DcRangeSlider extends HTMLElement {
       stepElement.setAttribute('aria-label', String(i));
       stepElement.classList.add('step');
       stepElement.onclick = this.stepSelected.bind(this)
-      sliderContainer.appendChild(stepElement);
+      stepSelectorContainer.appendChild(stepElement);
     }
     
     this.value = initialValue;
@@ -133,9 +133,9 @@ class DcRangeSlider extends HTMLElement {
   }
 
   highlightUpTo(value: number) {
-    const sliderContainer = this.shadowRoot.querySelector('.slider-container');
+    const stepSelectorContainer = this.shadowRoot.querySelector('.step-selector-container');
     
-    for (let step of sliderContainer.children) {
+    for (let step of stepSelectorContainer.children) {
       const stepValue = Number((step as HTMLElement).dataset.val);
       step.setAttribute('aria-label', String(stepValue));
 
@@ -176,4 +176,4 @@ class DcRangeSlider extends HTMLElement {
   }
 }
 
-window.customElements.define('dc-range-slider', DcRangeSlider);
+window.customElements.define('dc-step-selector', DcStepSelector);

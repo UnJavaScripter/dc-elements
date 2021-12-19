@@ -79,10 +79,12 @@ class DCAnyRating extends HTMLElement {
       templateElement?.classList.remove('full', 'empty');
       if (i < this.value) {
         templateElement?.classList.add('full');
-      }else {
+      } else {
         templateElement?.classList.add('empty');
       }
+
       const templateElementClone = templateElement!.cloneNode(true);
+
       if (!this.static) {
         templateElementClone.addEventListener('click', () => {
           this.handleClick(i + 1);
