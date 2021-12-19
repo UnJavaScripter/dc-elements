@@ -4,12 +4,6 @@ class DcAddChips extends HTMLElement {
         super();
         this.chipsArr = [];
         this._chips = new Set();
-        // Debounce
-        // API call
-        // Autocomplete list
-        // Navigation
-        // Enter = keep open
-        // Click = close and clear
         const shadowRoot = this.attachShadow({ mode: 'open' });
         const style = document.createElement('style');
         const fakeInput = document.createElement('input');
@@ -31,7 +25,12 @@ class DcAddChips extends HTMLElement {
             if (actionableKeyValues.indexOf($event.key) !== -1) {
                 $event.preventDefault();
                 if (fakeInputElem.value.length) {
-                    this.value = `${this.value},${fakeInputElem.value}`;
+                    if (this.value.length) {
+                        this.value = `${this.value},${fakeInputElem.value}`;
+                    }
+                    else {
+                        this.value = fakeInputElem.value;
+                    }
                     fakeInputElem.value = '';
                 }
             }
@@ -53,11 +52,19 @@ class DcAddChips extends HTMLElement {
         });
         this.renderChips(this.chips);
         this.emitValue(this.value);
-        this.setAttribute('value', this.value);
+        if (val === "") {
+            this.removeAttribute('value');
+        }
+        else {
+            this.setAttribute('value', this.value);
+        }
     }
     attributeChangedCallback(attrName, oldValue, newValue) {
         switch (attrName) {
             case ('value'): {
+                if (newValue === this.value) {
+                    return;
+                }
                 if (!oldValue) {
                     this.value = newValue;
                 }
@@ -97,7 +104,7 @@ class DcAddChips extends HTMLElement {
             // Remove the chipValue from the values
             this.chips.delete(chipValue);
             const newChipsArr = Array.from(this.chips);
-            this.value = newChipsArr.join(',');
+            this.value = newChipsArr.length ? newChipsArr.join(',') : "";
         };
         return chipElem;
     }

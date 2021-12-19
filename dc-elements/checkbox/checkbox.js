@@ -24,6 +24,9 @@ class DcCheckbox extends HTMLElement {
                 this.toggleCheckedState();
             }
         });
+        this.boxInput.addEventListener('change', () => {
+            this.toggleCheckedState();
+        });
         this.createCheckBoxes(this.boxLabel);
         this.boxContainer.appendChild(this.boxInput);
         this.boxContainer.appendChild(this.boxLabel);
@@ -36,14 +39,14 @@ class DcCheckbox extends HTMLElement {
     }
     triggerChange() {
         const changeEvent = new CustomEvent('change', {
-            detail: { elemId: this.id, value: !this.checked }
+            detail: { elemId: this.id, value: this.checked }
         });
         this.dispatchEvent(changeEvent);
     }
     toggleCheckedState() {
-        this.triggerChange();
         this.checked = !this.checked;
         this.setLocalCheckState(this.checked);
+        this.triggerChange();
     }
     attributeChangedCallback(attrName, oldValue, newValue) {
         switch (attrName) {
@@ -56,8 +59,6 @@ class DcCheckbox extends HTMLElement {
             }
         }
     }
-    _updateRendering(attrName, newVal) {
-    }
     getCheckedStateFromAttr(attrVal) {
         if (attrVal !== null) {
             return attrVal === '' || attrVal === 'checked' || attrVal === 'true';
@@ -69,10 +70,12 @@ class DcCheckbox extends HTMLElement {
     }
     setLocalCheckState(checkedState) {
         if (checkedState) {
+            this.setAttribute('checked', 'true');
             this.boxInput.checked = true;
             this.setAttribute('aria-checked', 'true');
         }
         else {
+            this.setAttribute('checked', 'false');
             this.boxInput.checked = false;
             this.setAttribute('aria-checked', 'false');
         }

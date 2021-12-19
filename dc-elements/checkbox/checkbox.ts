@@ -37,6 +37,10 @@ class DcCheckbox extends HTMLElement {
       }
     })
 
+    this.boxInput.addEventListener('change', () => {
+      this.toggleCheckedState()
+    });
+
     this.createCheckBoxes(this.boxLabel);
 
     this.boxContainer.appendChild(this.boxInput);
@@ -51,18 +55,18 @@ class DcCheckbox extends HTMLElement {
     return ['checked'];
   }
 
-  triggerChange() {
+  private triggerChange() {
     const changeEvent = new CustomEvent('change', {
-      detail: { elemId: this.id, value: !this.checked }
+      detail: { elemId: this.id, value: this.checked }
     });
 
     this.dispatchEvent(changeEvent);
   }
 
-  toggleCheckedState() {
-    this.triggerChange();
+  private toggleCheckedState() {
     this.checked = !this.checked
     this.setLocalCheckState(this.checked);
+    this.triggerChange();
   }
 
   attributeChangedCallback(attrName: string, oldValue: string, newValue: string) {
@@ -77,31 +81,30 @@ class DcCheckbox extends HTMLElement {
     }
   }
 
-  _updateRendering(attrName: string, newVal: string) {
-  }
-
-  getCheckedStateFromAttr(attrVal: string | null) {
+  private getCheckedStateFromAttr(attrVal: string | null) {
     if (attrVal !== null) {
       return attrVal === '' || attrVal === 'checked' || attrVal === 'true';
     }
     return false;
   }
 
-  updateLabel(text: string | null) {
+  private updateLabel(text: string | null) {
     this.boxLabel.insertAdjacentHTML('afterbegin', `<span>${text || 'Option'}</span>`);
   }
 
-  setLocalCheckState(checkedState: boolean) {
+  private setLocalCheckState(checkedState: boolean) {
     if (checkedState) {
+      this.setAttribute('checked', 'true');
       this.boxInput.checked = true;
       this.setAttribute('aria-checked', 'true');
     } else {
+      this.setAttribute('checked', 'false');
       this.boxInput.checked = false;
       this.setAttribute('aria-checked', 'false');
     }
   }
 
-  styles() {
+  private styles() {
     return `
       :host {
         font-family: sans-serif;
@@ -147,7 +150,7 @@ class DcCheckbox extends HTMLElement {
     `;
   }
 
-  createCheckBoxes(containerElem: HTMLElement) {
+  private createCheckBoxes(containerElem: HTMLElement) {
     const svgChecked = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     const svgUnchecked = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 

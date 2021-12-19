@@ -5,12 +5,6 @@ class DcAddChips extends HTMLElement {
   
   constructor() {
     super();
-    // Debounce
-    // API call
-    // Autocomplete list
-      // Navigation
-      // Enter = keep open
-      // Click = close and clear
 
     const shadowRoot = this.attachShadow({ mode: 'open' });
     const style = document.createElement('style');
@@ -40,7 +34,11 @@ class DcAddChips extends HTMLElement {
       if(actionableKeyValues.indexOf($event.key) !== -1) {
         $event.preventDefault();
         if(fakeInputElem.value.length) {
-          this.value = `${this.value},${fakeInputElem.value}`;
+          if(this.value.length) {
+            this.value = `${this.value},${fakeInputElem.value}`;
+          } else {
+            this.value = fakeInputElem.value;
+          }
           fakeInputElem.value = '';
         }
       }
@@ -58,20 +56,30 @@ class DcAddChips extends HTMLElement {
   set value(val: string) {
     this._value = val;
     const valueArr = val.split(',');
+    
     valueArr.forEach((v) => {
       if(v) {
         this._chips.add(v)
       }
     });
+    
     this.renderChips(this.chips);
     this.emitValue(this.value);
-    this.setAttribute('value', this.value)
+    
+    if(val === "") {
+      this.removeAttribute('value');
+    } else {
+      this.setAttribute('value', this.value);
+    }
   }
   
 
   attributeChangedCallback(attrName: string, oldValue: string, newValue: string) {
     switch (attrName) {
       case ('value'): {
+        if(newValue === this.value) {
+          return
+        }
         if(!oldValue) {
           this.value = newValue;
         }
@@ -120,7 +128,7 @@ class DcAddChips extends HTMLElement {
       // Remove the chipValue from the values
       this.chips.delete(chipValue);
       const newChipsArr = Array.from(this.chips);
-      this.value = newChipsArr.join(',');
+      this.value = newChipsArr.length ? newChipsArr.join(',') : "";
     };
     
     return chipElem;
