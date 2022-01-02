@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facts Card</title>
+  <style>
+    body {
+      background-color: #f3f4f6;
+      color: #525258;
+      font-family: System-ui;
+      margin: 0;
+      padding: 2rem 3rem;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Facts Card</h1>
+
+  <dc-facts-card
+    id="avocado-classification-card"
+    header="Avocado - Scientific Classification"
+    facts='{"Kingdom":	"Plantae", "Order":	"Laurales", "Family":	"Lauraceae", "Genus":	"Persea", "Species":	"P. americana"}'
+    separator=":">
+  </dc-facts-card>
+  <dc-facts-card id="avocado-nutritional-facts-card" header="Avocado - Nutritional Facts (Vitamins)"></dc-facts-card>
+
+  <script src="./facts-card.js"></script>
+  <script>
+    const nutritionalFactsCard = document.getElementById('avocado-nutritional-facts-card');
+    const avocadoVitaminsFacts = {
+      "Vitamin A equiv.": "7 μg",
+      "Thiamine (B1)": "0.067 mg",
+      "Riboflavin (B2)": "0.13 mg",
+      "Niacin (B3)": "1.738 mg",
+      "Pantothenic acid (B5)": "1.389 mg",
+      "Vitamin B6": "0.257 mg",
+      "Folate (B9)": "81 μg",
+      "Vitamin C": "10 mg",
+      "Vitamin E": "2.07 mg",
+      "Vitamin K": "21 μg",
+    }
+    nutritionalFactsCard.setAttribute('facts', JSON.stringify(avocadoVitaminsFacts));
+  </script>
+</body>
+
+</html>
