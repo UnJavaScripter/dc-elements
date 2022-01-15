@@ -48,6 +48,11 @@ factTemplate.innerHTML = `
     padding: 0.1ch;
   }
 
+  .value {
+    margin-left: 1ch;
+    margin-right: 1ch;
+  }
+
 </style>
 <article id="card" class="card">
   <header id="header" class="header"></header>
@@ -99,7 +104,7 @@ class DcFactsCard extends HTMLElement {
         let factsListContent = '';
         for (let [fact, value] of this.facts) {
             factsListContent += `<li class="fact">
-        <div class="label">${fact} ${this.separator ? `<span class="separator">${this.separator}</span>` : ''}</div>
+        <div class="label"><div>${fact}${this.separator ? `<span class="separator">${this.separator}</span>` : ''}</div></div>
         <div class="value">${value}</div>
       </li>`;
         }

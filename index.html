@@ -7,69 +7,104 @@
   <style>
     body {
       font-family: system-ui;
+      background-color: #f3f4f6;
     }
+    .elements-cards {
+      display: flex;
+      justify-content: flex-start;
+      flex-direction: row;
+      align-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .element-card {
+      flex: 1 0 calc(25% - 1rem);
+      margin: 1rem;
+    }
+
   </style>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>">
 </head>
 <body>
-  <ul>
-    <li>Repo: <a href="https://github.com/UnJavaScripter/dc-elements" rel="noopener" target="_blank">https://github.com/UnJavaScripter/dc-elements</a></li>
-    <li>
-      <h2>Checkbox</h2>
-      <ul>
-        <li>
-          <a href="./dc-elements/checkbox/index.html">Demo</a>
-        </li>
-      </ul>
-    </li>
-    <li>
-      <h2>Chips</h2>
-      <ul>
-        <li>
-          <a href="./dc-elements/add-chips/index.html">Chips</a>
-        </li>
-      </ul>
-    </li>
-    <li>
-      <h2>Star rating</h2>
-      <ul>
-        <li>
-          <a href="./dc-elements/star-rating/index.html">Demo</a>
-        </li>
-      </ul>
-    </li>
-    <li>
-      <h2>SVG rating</h2>
-      <ul>
-        <li>
-          <a href="./dc-elements/svg-rating/index.html">Demo</a>
-        </li>
-      </ul>
-    </li>
-    <li>
-      <h2>SVG icon</h2>
-      <ul>
-        <li>
-          <a href="./dc-elements/svg-icon/index.html">Demo</a>
-        </li>
-      </ul>
-    </li>
-    <li>
-      <h2>Step selector</h2>
-      <ul>
-        <li>
-          <a href="./dc-elements/step-selector/index.html">Demo</a>
-        </li>
-      </ul>
-    </li>
-    <li>
-      <h2>Facts card</h2>
-      <ul>
-        <li>
-          <a href="./dc-elements/facts-card/index.html">Demo</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
+  <main>
+    <h1>DC Elements</h1>
+    <p>A set of no-dependency web components.</p>
+    <p>Repo: <a href="https://github.com/UnJavaScripter/dc-elements" rel="noopener" target="_blank">https://github.com/UnJavaScripter/dc-elements</a></li></p>
+    <section class="elements-cards">
+      <article class="element-card">
+        <dc-facts-card
+          header="Checkbox"
+          facts='{"Description": "A checkbox element that keeps its state and triggers a change event on every change.",
+          "Demo": "<a href=\"./dc-elements/checkbox/index.html\">Here</a>",
+          "Code": "<a href=\"https://github.com/UnJavaScripter/dc-elements/tree/master/dc-elements/checkbox\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"}'
+          separator=":"
+          >
+        </dc-facts-card>
+      </article>
+      <article class="element-card">
+        <dc-facts-card
+          header="Chips"
+          facts='{"Description": "An element that allows you to add strings to a list of \"chips\" from an input.",
+          "Demo": "<a href=\"./dc-elements/add-chips/index.html\">Here</a>",
+          "Code": "<a href=\"https://github.com/UnJavaScripter/dc-elements/tree/master/dc-elements/add-chips\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"}'
+          separator=":"
+          >
+        </dc-facts-card>
+      </article>
+      <article class="element-card">
+        <dc-facts-card
+          header="Star rating"
+          facts='{"Description": "A basic star rating component that lets users rate something.",
+          "Demo": "<a href=\"./dc-elements/star-rating/index.html\">Here</a>",
+          "Code": "<a href=\"https://github.com/UnJavaScripter/dc-elements/tree/master/dc-elements/star-rating\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"}'
+          separator=":"
+          >
+        </dc-facts-card>
+      </article>
+      <article class="element-card">
+        <dc-facts-card
+          header="SVG rating"
+          facts='{"Description": "A highly customizable star rating component that can use more than \"stars\" to let users rate something.",
+          "Demo": "<a href=\"./dc-elements/svg-rating/index.html\">Here</a>",
+          "Code": "<a href=\"https://github.com/UnJavaScripter/dc-elements/tree/master/dc-elements/svg-rating\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"}'
+          separator=":"
+          >
+        </dc-facts-card>
+      </article>
+      <article class="element-card">
+        <dc-facts-card
+          header="SVG icon"
+          facts='{"Description": "A component that makes an icon out of an SVG element you can pass via HTML templates.",
+          "Demo": "<a href=\"./dc-elements/svg-icon/index.html\">Here</a>",
+          "Code": "<a href=\"https://github.com/UnJavaScripter/dc-elements/tree/master/dc-elements/svg-icon\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"}'
+          separator=":"
+          >
+        </dc-facts-card>
+      </article>
+      <article class="element-card">
+        <dc-facts-card
+          header="Step selector"
+          facts='{"Description": "A customizable step selector component.",
+          "Demo": "<a href=\"./dc-elements/step-selector/index.html\">Here</a>",
+          "Code": "<a href=\"https://github.com/UnJavaScripter/dc-elements/tree/master/dc-elements/step-selector\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"}'
+          separator=":"
+          >
+        </dc-facts-card>
+      </article>
+      <article class="element-card">
+        <dc-facts-card
+          header="Facts card"
+          facts='{"Description": "A card component that renders a list of key value pairs as a set of \"fact\" attributes.",
+          "Demo": "<a href=\"./dc-elements/facts-card/index.html\">Here</a>",
+          "Code": "<a href=\"https://github.com/UnJavaScripter/dc-elements/tree/master/dc-elements/facts-card\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>"}'
+          separator=":"
+          >
+        </dc-facts-card>
+      </article>
+    </section>
+  </main>
+
+  <script src="./dc-elements/facts-card/facts-card.js"></script>
 </body>
 </html>
