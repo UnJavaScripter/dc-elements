@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oscilloscope</title>
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+    }
+    .osc-container {
+      max-width: 900px;
+      min-width: 90px;
+      width: 90%;
+      height: 50rem;
+    }
+
+    article {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<header>
+    <h1>Speak!</h1>
+  </header>
+  <div class="osc-container">
+    <dc-oscilloscope id="osc"></dc-oscilloscope>
+  </div>
+  <section>
+    <article>
+      <p>Allow the browser to capture sound.</p>
+      <p>Then see the sound waves move around.</p>
+    </article>
+  </section>
+  <script src="./oscilloscope.js"></script>
+  <script>
+    (async function() {
+      const oscElem = document.getElementById('osc');
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: false,
+        audio: true
+      })
+
+      oscElem.setStream(await stream)
+      oscElem.start()
+      setTimeout(() => {
+        oscElem.disconnectResizeObserver()
+      }, 30000);
+    })();
+  </script>
+</body>
+</html>
